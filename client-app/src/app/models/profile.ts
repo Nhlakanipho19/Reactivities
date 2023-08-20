@@ -6,7 +6,7 @@ export interface Profile
     displayName:string;
     image? :string;
     bio?:string;
-    phothos? : Photo[];
+    photos? : Photo[];
 }
 
 export class Profile implements Profile{
