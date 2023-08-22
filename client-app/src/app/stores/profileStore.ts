@@ -2,15 +2,15 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { Photo, Profile } from "../models/profile";
 import agent from "../api/agent";
 import { store } from "./store";
-import { url } from "inspector";
-import { wait } from "@testing-library/user-event/dist/utils";
+import { boolean } from "yup";
 
 export default class ProfileStore {
     profile: Profile | null = null;
     loadingProfile = false;
     uploading = false;
     loading = false;
-
+    followings: Profile[] = [];
+    loadingFollowings = false;
 
     constructor() {
         makeAutoObservable(this)
@@ -77,17 +77,40 @@ export default class ProfileStore {
         this.loading = true;
         try {
             await agent.Profiles.deletePhoto(photo.id);
-                runInAction(() => {
-                    if
-                        (this.profile) {
-                        this.profile.photos = this.profile.photos?.filter(p => p.id !== photo.id)
-                        this.loading = false;
-                    }
-                })
-            
+            runInAction(() => {
+                if
+                    (this.profile) {
+                    this.profile.photos = this.profile.photos?.filter(p => p.id !== photo.id)
+                    this.loading = false;
+                }
+            })
+
 
         } catch (error) {
             console.log(error)
+            runInAction(() => this.loading = false)
+        }
+    }
+    updateFollowing = async (username: string, Following: boolean) => {
+        this.loading = true;
+        try {
+            await agent.Profiles.updateFollowing(username);
+            store.activityStore.UpdateAttendeeFollowing(username);
+            runInAction(() => {
+                if (this.profile && this.profile.username !== store.userStore.user?.username) {
+                    Following ? this.profile.followersCount++ : this.profile.followersCount--;
+                    this.profile.following = !this.profile.following
+                }
+                this.followings.forEach(profile => {
+                    if(profile.username === username){
+                        profile.following ? profile.followersCount-- : profile.followersCount++;
+                        profile.following = !profile.following;
+                    }
+                })
+                this.loading = false;
+            })
+        } catch (error) {
+            console.log(error);
             runInAction(() => this.loading = false)
         }
     }

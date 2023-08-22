@@ -2,6 +2,7 @@ import { Button, Divider, Grid, Header, Item, Reveal, Segment, Statistic } from 
 import { Activity } from "../../app/models/activity";
 import { Profile } from "../../app/models/profile";
 import { observer } from "mobx-react-lite";
+import FollowButton from "./FollowButton";
 
 
 
@@ -28,23 +29,11 @@ export default observer( function Profileheader({profile}: Props) {
                 </Grid.Column>
                 <Grid.Column width={4}>
                     <Statistic.Group widths={2}>
-                        <Statistic label='Followers' value='21 ' />
-                        <Statistic label='Following' value="15" />
+                        <Statistic label='Followers' value={profile.followersCount}/>
+                        <Statistic label='Following' value={profile.followingCount} />
                     </Statistic.Group>
                     <Divider />
-                    <Reveal animated="move">
-                        <Reveal.Content visible style={{ width: '100%' }}>
-                            <Button fluid color="teal" content="Following"/>
-                        </Reveal.Content>
-                        <Reveal.Content hidden style={{ width: '100%' }}>
-                            <Button
-                             fluid 
-                             basic
-                             color={true? 'red' : 'green' }
-                             content={true? "Unfollow" : "Follow"}/>
-                        </Reveal.Content>
-
-                    </Reveal>
+                  <FollowButton profile={profile}/>
 
                 </Grid.Column>
             </Grid>

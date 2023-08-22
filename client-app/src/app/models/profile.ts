@@ -6,10 +6,14 @@ export interface Profile
     displayName:string;
     image? :string;
     bio?:string;
+    followersCount: number;
+    followingCount : number;
+    following : boolean;
     photos? : Photo[];
 }
 
 export class Profile implements Profile{
+    preventDefault: any;
     constructor(user:User){
         this.username = user.username;
         this.displayName = user.displayName;

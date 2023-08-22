@@ -6,6 +6,7 @@ import { router } from "../router/Routes";
 import { store } from "../stores/store";
 import { User, UserFormValues } from "../models/user";
 import { Photo, Profile } from "../models/profile";
+import { profile } from "console";
 
 const sleep = (delay:number) =>{
     return new Promise((resolve) =>{
@@ -98,7 +99,11 @@ const Profiles = {
 
     }),
     setMainPhoto :(id:string) => request.post(`/photos/${id}/setMain`,{}),
-    deletePhoto:(id:string) => request.del(`/photos/${id}`) 
+    deletePhoto:(id:string) => request.del(`/photos/${id}`) ,
+    updateProfile : (profile:Partial<Profile>) => request.put(`/profiles`, profile),
+    updateFollowing: (username: string) => request.post(`/follow/${username}`, {}),
+    ListFollowing :(username:string,predicate:string) => request.get<Profile[]>(`/follow/${username}?predicate=${predicate}`)
+    
 }
 
 const agent ={
