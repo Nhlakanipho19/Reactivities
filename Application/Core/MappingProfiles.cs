@@ -15,6 +15,7 @@ namespace Application.Core
         {
 
             string currentUsername = null;
+            
             CreateMap<Activity, Activity>();
             CreateMap<Activity, ActivityDto>()
             .ForMember(d => d.HostUsername, o => o.MapFrom(s => s.Attendees
